@@ -59,7 +59,13 @@ open class KeyboardHandler {
             let userInfo = notification.userInfo;
             let keyboardFrame:CGRect? = (userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue;
             let animationDuration:Double? = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue;
-            let animationCurve:UIViewAnimationCurve? = userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationCurve;
+        
+            var animationCurve:UIViewAnimationCurve? = nil
+            let curve = userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? UInt
+        
+            if curve != nil {
+                animationCurve = UIViewAnimationCurve(rawValue: Int(curve! << 16))
+            }
         
             if self != nil && self!.willShowHandler != nil{
                 self!.willShowHandler!(keyboardFrame, animationDuration, animationCurve);
@@ -77,7 +83,13 @@ open class KeyboardHandler {
             
             let userInfo = notification.userInfo;
             let animationDuration:Double? = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue;
-            let animationCurve:UIViewAnimationCurve? = userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? UIViewAnimationCurve;
+            
+            var animationCurve:UIViewAnimationCurve? = nil
+            let curve = userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? UInt
+            
+            if curve != nil {
+                animationCurve = UIViewAnimationCurve(rawValue: Int(curve! << 16))
+            }
             
             if self != nil && self!.willHideHandler != nil{
                 self!.willHideHandler!(animationDuration, animationCurve);
