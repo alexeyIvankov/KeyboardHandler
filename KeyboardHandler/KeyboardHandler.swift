@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class KeyboardHandler {
+open class KeyboardHandler {
  
     //MARK: Handlers
     private var willShowHandler:((_ keyboardFrame:CGRect?, _ animationDuration:Double?, _ animationCurve:UIViewAnimationCurve?)->Void)?;
@@ -25,7 +25,7 @@ class KeyboardHandler {
     private var didHideNotification:NSObjectProtocol?;
     
 
-    init()
+    public init()
     {
         subscribeNotifications();
     }
@@ -36,19 +36,19 @@ class KeyboardHandler {
         destroyNotifications();
     }
     
-    func setWillShowHandler(handler:@escaping (_ keyboardFrame:CGRect?, _ animationDuration:Double?, _ animationCurve:UIViewAnimationCurve?)->Void){
+    public func setWillShowHandler(handler:@escaping (_ keyboardFrame:CGRect?, _ animationDuration:Double?, _ animationCurve:UIViewAnimationCurve?)->Void){
         willShowHandler = handler;
     }
     
-    func setDidShowHandler(handler:@escaping ()->Void){
+    public  func setDidShowHandler(handler:@escaping ()->Void){
         didShowHandler = handler;
     }
     
-    func setWillHideHandler(handler:@escaping (_ animationDuration:Double?, _ animationCurve:UIViewAnimationCurve?)->Void){
+    public func setWillHideHandler(handler:@escaping (_ animationDuration:Double?, _ animationCurve:UIViewAnimationCurve?)->Void){
         willHideHandler = handler;
     }
     
-    func setDidHideHandler(handler:@escaping ()->Void){
+    public func setDidHideHandler(handler:@escaping ()->Void){
         didHideHandler = handler;
     }
     
