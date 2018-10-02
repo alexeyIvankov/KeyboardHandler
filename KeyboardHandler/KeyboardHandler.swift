@@ -14,14 +14,14 @@ open class KeyboardHandler {
     private var willShowHandler:((
     _ keyboardFrame:CGRect?,
     _ animationDuration:Double?,
-    _ animationCurve:UIViewAnimationOptions?)->Void)?
+    _ animationCurve:UIView.AnimationOptions?)->Void)?
     
     private var animateWillShowHandler:((
     _ keyboardFrame:CGRect?)->Void)?
     
     private var willHideHandler:((
     _ animationDuration:Double?,
-    _ animationCurve:UIViewAnimationOptions?)->Void)?
+    _ animationCurve:UIView.AnimationOptions?)->Void)?
 
     private var animateWillHideHandler:(()->Void)?
     
@@ -44,7 +44,7 @@ open class KeyboardHandler {
         destroyNotifications();
     }
     
-    public func setWillShowHandler(handler:@escaping (_ keyboardFrame:CGRect?, _ animationDuration:Double?, _ animationCurve:UIViewAnimationOptions?)->Void){
+    public func setWillShowHandler(handler:@escaping (_ keyboardFrame:CGRect?, _ animationDuration:Double?, _ animationCurve:UIView.AnimationOptions?)->Void){
         willShowHandler = handler;
     }
     
@@ -52,7 +52,7 @@ open class KeyboardHandler {
         didShowHandler = handler;
     }
     
-    public func setWillHideHandler(handler:@escaping (_ animationDuration:Double?, _ animationCurve:UIViewAnimationOptions?)->Void){
+    public func setWillHideHandler(handler:@escaping (_ animationDuration:Double?, _ animationCurve:UIView.AnimationOptions?)->Void){
         willHideHandler = handler;
     }
     
@@ -70,17 +70,17 @@ open class KeyboardHandler {
     
     private func subscribeNotifications()
     {
-        willShowNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil, queue: OperationQueue.main)  { [weak self]  (notification:Notification)  in
+        willShowNotification = NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: OperationQueue.main)  { [weak self]  (notification:Notification)  in
             
             let userInfo = notification.userInfo;
-            let keyboardFrame:CGRect? = (userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue;
-            let animationDuration:Double? = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue;
+            let keyboardFrame:CGRect? = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue;
+            let animationDuration:Double? = (userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue;
             
-            var animationCurve:UIViewAnimationOptions? = nil
-            let curve = userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            var animationCurve:UIView.AnimationOptions? = nil
+            let curve = userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
             
             if curve != nil {
-                animationCurve = UIViewAnimationOptions(rawValue: curve!.uintValue)
+                animationCurve = UIView.AnimationOptions(rawValue: curve!.uintValue)
             }
             
             if self != nil && self!.willShowHandler != nil{
@@ -104,23 +104,23 @@ open class KeyboardHandler {
             }
         }
         
-        didShowNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardDidShow, object: nil, queue: OperationQueue.main) { [weak self]  (notification:Notification) in
+        didShowNotification = NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: OperationQueue.main) { [weak self]  (notification:Notification) in
             
             if self != nil && self!.didShowHandler != nil{
                 self!.didShowHandler!();
             }
         }
         
-        willHideNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil, queue: OperationQueue.main) { [weak self] (notification:Notification) in
+        willHideNotification = NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: OperationQueue.main) { [weak self] (notification:Notification) in
             
             let userInfo = notification.userInfo;
-            let animationDuration:Double? = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue;
+            let animationDuration:Double? = (userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue;
             
-            var animationCurve:UIViewAnimationOptions? = nil
-            let curve = userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            var animationCurve:UIView.AnimationOptions? = nil
+            let curve = userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
             
             if curve != nil {
-                animationCurve = UIViewAnimationOptions(rawValue: curve!.uintValue)
+                animationCurve = UIView.AnimationOptions(rawValue: curve!.uintValue)
             }
             
             if self != nil && self!.willHideHandler != nil{
@@ -144,7 +144,7 @@ open class KeyboardHandler {
             }
         }
         
-        didHideNotification = NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardDidHide, object: nil, queue: OperationQueue.main) { [weak self] (notification:Notification) in
+        didHideNotification = NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification, object: nil, queue: OperationQueue.main) { [weak self] (notification:Notification) in
             
             if self != nil && self!.didHideHandler != nil{
                 self!.didHideHandler!();
